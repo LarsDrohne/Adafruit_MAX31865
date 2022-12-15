@@ -43,6 +43,8 @@
 #define MAX31865_FAULT_RTDINLOW 0x08
 #define MAX31865_FAULT_OVUV 0x04
 
+#define MCP_PIN_A1 1 // CS_MAX
+
 #define RTD_A 3.9083e-3
 #define RTD_B -5.775e-7
 
@@ -53,6 +55,7 @@
 #endif
 
 #include <Adafruit_SPIDevice.h>
+#include <Adafruit_MCP23X17.h>
 
 typedef enum max31865_numwires {
   MAX31865_2WIRE = 0,
@@ -95,6 +98,7 @@ public:
 
 private:
   Adafruit_SPIDevice spi_dev;
+  Adafruit_MCP23X17 mcp;
 
   void readRegisterN(uint8_t addr, uint8_t buffer[], uint8_t n);
 
