@@ -57,7 +57,17 @@ Adafruit_MAX31865::Adafruit_MAX31865(int8_t spi_cs, SPIClass *theSPI)
 */
 /**************************************************************************/
 bool Adafruit_MAX31865::begin(max31865_numwires_t wires) {
+
+  if (!mcp.begin_I2C()) {
+  //if (!mcp.begin_SPI(CS_PIN)) {
+    Serial.println("Error.");
+  }
+
+  mcp.pinMode(MCP_PIN_A1, OUTPUT);
+
+  mcp.digitalWrite(MCP_PIN_A1, LOW);
   spi_dev.begin();
+  mcp.digitalWrite(MCP_PIN_A1, HIGH);
 
   setWires(wires);
   enableBias(false);
@@ -336,12 +346,17 @@ void Adafruit_MAX31865::readRegisterN(uint8_t addr, uint8_t buffer[],
                                       uint8_t n) {
   addr &= 0x7F; // make sure top bit is not set
 
+  mcp.digitalWrite(MCP_PIN_A1, LOW);
   spi_dev.write_then_read(&addr, 1, buffer, n);
+  mcp.digitalWrite(MCP_PIN_A1, HIGH);
 }
 
 void Adafruit_MAX31865::writeRegister8(uint8_t addr, uint8_t data) {
   addr |= 0x80; // make sure top bit is set
 
   uint8_t buffer[2] = {addr, data};
+
+  mcp.digitalWrite(MCP_PIN_A1, LOW);
   spi_dev.write(buffer, 2);
+  mcp.digitalWrite(MCP_PIN_A1, HIGH);
 }
