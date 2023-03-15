@@ -57,13 +57,15 @@
 #include <Adafruit_SPIDevice.h>
 #include <Adafruit_MCP23X17.h>
 
-typedef enum max31865_numwires {
+typedef enum max31865_numwires
+{
   MAX31865_2WIRE = 0,
   MAX31865_3WIRE = 1,
   MAX31865_4WIRE = 0
 } max31865_numwires_t;
 
-typedef enum {
+typedef enum
+{
   MAX31865_FAULT_NONE = 0,
   MAX31865_FAULT_AUTO,
   MAX31865_FAULT_MANUAL_RUN,
@@ -71,11 +73,14 @@ typedef enum {
 } max31865_fault_cycle_t;
 
 /*! Interface class for the MAX31865 RTD Sensor reader */
-class Adafruit_MAX31865 {
+class Adafruit_MAX31865
+{
 public:
   Adafruit_MAX31865(int8_t spi_cs, int8_t spi_mosi, int8_t spi_miso,
                     int8_t spi_clk);
   Adafruit_MAX31865(int8_t spi_cs, SPIClass *theSPI = &SPI);
+
+  void setMcp(Adafruit_MCP23X17 *mcpIn);
 
   bool begin(max31865_numwires_t x = MAX31865_2WIRE);
 
@@ -98,7 +103,7 @@ public:
 
 private:
   Adafruit_SPIDevice spi_dev;
-  Adafruit_MCP23X17 mcp;
+  Adafruit_MCP23X17 *mcp;
 
   void readRegisterN(uint8_t addr, uint8_t buffer[], uint8_t n);
 
